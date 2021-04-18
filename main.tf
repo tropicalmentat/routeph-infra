@@ -6,8 +6,11 @@ provider digitalocean {
 variable do_token {}
 
 resource "digitalocean_project" "sandbox" {
-   name="sandbox"
-   resources=[digitalocean_vpc.web.urn,digitalocean_droplet.gateway.urn,digitalocean_droplet.api.urn,digitalocean_droplet.gh.urn,digitalocean_droplet.db.urn]
+   name="rowt-sandbox"
+   resources=[digitalocean_droplet.gateway.urn,
+              digitalocean_droplet.api.urn,
+              digitalocean_droplet.gh.urn,
+              digitalocean_droplet.db.urn]
 }
 
 resource "digitalocean_droplet" "gateway" {
@@ -15,6 +18,7 @@ resource "digitalocean_droplet" "gateway" {
    image="ubuntu-20-04-x64"
    region="sgp1"
    size="s-1vcpu-1gb"
+   vpc_uuid=digitalocean_vpc.sandbox.id
 }
 
 resource "digitalocean_droplet" "api" {
@@ -22,12 +26,13 @@ resource "digitalocean_droplet" "api" {
    image="ubuntu-20-04-x64"
    region="sgp1"
    size="s-1vcpu-1gb"
+   vpc_uuid=digitalocean_vpc.sandbox.id
+
 }
 
-resource "digitalocean_vpc" "web" {
+resource "digitalocean_vpc" "sandbox" {
    name="rowt-dev-vpc"
    region="sgp1"
-   ip_range="10.104.16.0/20"
 }
 
 resource "digitalocean_droplet" "gh" {
@@ -35,6 +40,7 @@ resource "digitalocean_droplet" "gh" {
    image="ubuntu-20-04-x64"
    region="sgp1"
    size="s-2vcpu-4gb"
+   vpc_uuid=digitalocean_vpc.sandbox.id
 }
 
 resource "digitalocean_droplet" "db" {
@@ -42,4 +48,5 @@ resource "digitalocean_droplet" "db" {
    image="ubuntu-20-04-x64"
    region="sgp1"
    size="s-1vcpu-1gb"
+   vpc_uuid=digitalocean_vpc.sandbox.id
 }
