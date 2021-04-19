@@ -5,6 +5,10 @@ provider digitalocean {
 
 variable do_token {}
 
+variable "pubkey_path" {
+   type=string
+}
+
 resource "digitalocean_project" "sandbox" {
    name="rowt-sandbox"
    resources=[digitalocean_droplet.gateway.urn,
@@ -13,12 +17,23 @@ resource "digitalocean_project" "sandbox" {
               digitalocean_droplet.db.urn]
 }
 
+resource "digitalocean_vpc" "sandbox" {
+   name="rowt-dev-vpc"
+   region="sgp1"
+}
+
+resource "digitalocean_ssh_key" "admin" {
+   name="rowt admin"
+   public_key=file(var.pubkey_path)
+}
+
 resource "digitalocean_droplet" "gateway" {
-   name="rowt-dev-db"
+   name="rowt-dev-gw"
    image="ubuntu-20-04-x64"
    region="sgp1"
    size="s-1vcpu-1gb"
    vpc_uuid=digitalocean_vpc.sandbox.id
+   ssh_keys=[digitalocean_ssh_key.admin.fingerprint]
 }
 
 resource "digitalocean_droplet" "api" {
@@ -27,12 +42,7 @@ resource "digitalocean_droplet" "api" {
    region="sgp1"
    size="s-1vcpu-1gb"
    vpc_uuid=digitalocean_vpc.sandbox.id
-
-}
-
-resource "digitalocean_vpc" "sandbox" {
-   name="rowt-dev-vpc"
-   region="sgp1"
+   ssh_keys=[digitalocean_ssh_key.admin.fingerprint]
 }
 
 resource "digitalocean_droplet" "gh" {
@@ -41,6 +51,7 @@ resource "digitalocean_droplet" "gh" {
    region="sgp1"
    size="s-2vcpu-4gb"
    vpc_uuid=digitalocean_vpc.sandbox.id
+   ssh_keys=[digitalocean_ssh_key.admin.fingerprint]
 }
 
 resource "digitalocean_droplet" "db" {
@@ -49,4 +60,10 @@ resource "digitalocean_droplet" "db" {
    region="sgp1"
    size="s-1vcpu-1gb"
    vpc_uuid=digitalocean_vpc.sandbox.id
+   ssh_keys=[digitalocean_ssh_key.admin.fingerprint]
+}
+
+output "ssh_public_key" {
+   value=digitalocean_ssh_key.admin.public_key
+   sensitive=true
 }
