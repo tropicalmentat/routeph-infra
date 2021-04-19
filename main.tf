@@ -3,10 +3,16 @@ provider digitalocean {
     version = "2.7.0"
 }
 
-variable do_token {}
+variable do_token {
+   type=string
+}
 
 variable "pubkey_path" {
    type=string
+}
+
+variable "pvtkey_path" {
+  type=string
 }
 
 resource "digitalocean_project" "sandbox" {
@@ -34,6 +40,22 @@ resource "digitalocean_droplet" "gateway" {
    size="s-1vcpu-1gb"
    vpc_uuid=digitalocean_vpc.sandbox.id
    ssh_keys=[digitalocean_ssh_key.admin.fingerprint]
+
+   provisioner "remote-exec" {
+     inline = ["sudo apt update", "sudo apt install python3 -y", "echo Done!"]
+  
+     connection {
+       host=self.ipv4_address
+       type="ssh"
+       user="root"
+       private_key=file(var.pvtkey_path)
+     }
+   }
+  
+   provisioner "local-exec" {
+     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${var.pvtkey_path} -e 'pubkey_path=${var.pubkey_path}' config-hosts.yml"
+   }  
+
 }
 
 resource "digitalocean_droplet" "api" {
