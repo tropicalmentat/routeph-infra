@@ -1,3 +1,5 @@
+# https://coffay.haus/pages/terraform+ansible
+# https://alex.dzyoba.com/blog/terraform-ansible/
 provider digitalocean {
     token = var.do_token
     version = "2.7.0"
@@ -83,6 +85,13 @@ resource "digitalocean_droplet" "db" {
    size="s-1vcpu-1gb"
    vpc_uuid=digitalocean_vpc.sandbox.id
    ssh_keys=[digitalocean_ssh_key.admin.fingerprint]
+}
+
+resource "local_file" "inventory" {
+   filename="hosts"
+   content=<<EOT
+   ${digitalocean_droplet.gateway.ipv4_address}
+   EOT
 }
 
 output "ssh_public_key" {
