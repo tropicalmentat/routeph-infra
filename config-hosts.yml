@@ -1,4 +1,4 @@
-- become: yes
+- user: root
   hosts: all
   name: config-hosts
   tasks:
@@ -10,4 +10,4 @@
       authorized_key:
         user: rowt_admin
         state: present
-        key: "{{ lookup('file', pubkey_path) }}"
+        key: "{{ lookup('file', '/home/rowt_admin/.ssh/id_rsa.pub') }}"
