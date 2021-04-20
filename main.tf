@@ -31,7 +31,7 @@ resource "digitalocean_vpc" "sandbox" {
 }
 
 resource "digitalocean_ssh_key" "admin" {
-   name="rowt admin"
+   name="rowt_admin"
    public_key=file(var.pubkey_path)
 }
 
@@ -75,6 +75,24 @@ resource "local_file" "inventory" {
    filename="hosts"
    content=<<EOT
    ${digitalocean_droplet.gateway.ipv4_address}
+   ${digitalocean_droplet.api.ipv4_address} 
+   ${digitalocean_droplet.gh.ipv4_address}
+   ${digitalocean_droplet.db.ipv4_address}
+   EOT
+}
+
+resource "local_file" "host_script" {
+   filename="./add_hosts.sh"
+   content=<<EOT
+   echo "Setting SSH Key"
+   ssh-add /home/rowt_admin/.ssh/id_rsa
+   echo "Adding IPs"
+
+   ssh-keyscan -H ${digitalocean_droplet.gateway.ipv4_address} >> ~/.ssh/known_hosts
+   ssh-keyscan -H ${digitalocean_droplet.api.ipv4_address} >> ~/.ssh/known_hosts
+   ssh-keyscan -H ${digitalocean_droplet.gh.ipv4_address} >> ~/.ssh/known_hosts 
+   ssh-keyscan -H ${digitalocean_droplet.db.ipv4_address} >> ~/.ssh/known_hosts
+
    EOT
 }
 
