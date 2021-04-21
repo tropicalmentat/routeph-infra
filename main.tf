@@ -19,7 +19,7 @@ variable "pvtkey_path" {
 
 resource "digitalocean_project" "sandbox" {
    name="rowt-sandbox"
-   resources=[digitalocean_droplet.gateway.urn,
+   resources=[digitalocean_droplet.bastion.urn,
               digitalocean_droplet.api.urn,
               digitalocean_droplet.gh.urn,
               digitalocean_droplet.db.urn]
@@ -35,7 +35,7 @@ resource "digitalocean_ssh_key" "admin" {
    public_key=file(var.pubkey_path)
 }
 
-resource "digitalocean_droplet" "gateway" {
+resource "digitalocean_droplet" "bastion" {
    name="rowt-dev-gw"
    image="ubuntu-20-04-x64"
    region="sgp1"
@@ -74,7 +74,7 @@ resource "digitalocean_droplet" "db" {
 resource "local_file" "inventory" {
    filename="hosts"
    content=<<EOT
-   ${digitalocean_droplet.gateway.ipv4_address}
+   ${digitalocean_droplet.bastion.ipv4_address}
    ${digitalocean_droplet.api.ipv4_address} 
    ${digitalocean_droplet.gh.ipv4_address}
    ${digitalocean_droplet.db.ipv4_address}
@@ -88,7 +88,7 @@ resource "local_file" "host_script" {
    ssh-add /home/rowt_admin/.ssh/id_rsa
    echo "Adding IPs"
 
-   ssh-keyscan -H ${digitalocean_droplet.gateway.ipv4_address} >> ~/.ssh/known_hosts
+   ssh-keyscan -H ${digitalocean_droplet.bastion.ipv4_address} >> ~/.ssh/known_hosts
    ssh-keyscan -H ${digitalocean_droplet.api.ipv4_address} >> ~/.ssh/known_hosts
    ssh-keyscan -H ${digitalocean_droplet.gh.ipv4_address} >> ~/.ssh/known_hosts 
    ssh-keyscan -H ${digitalocean_droplet.db.ipv4_address} >> ~/.ssh/known_hosts
