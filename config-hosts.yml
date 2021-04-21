@@ -2,11 +2,11 @@
   hosts: all
   name: config-hosts
   tasks:
-    - name: Add the user 'rowt-admin' and add it to 'sudo'
+    - name: Add the user 'rowt_admin' and add it to 'sudo'
       user:
         name: rowt_admin
         group: sudo
-    - name: Add SSH key to 'rowt-admin'
+    - name: Add SSH key to 'rowt_admin'
       authorized_key:
         user: rowt_admin
         state: present

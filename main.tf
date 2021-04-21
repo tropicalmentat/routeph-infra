@@ -22,7 +22,9 @@ resource "digitalocean_project" "sandbox" {
    resources=[digitalocean_droplet.bastion.urn,
               digitalocean_droplet.api.urn,
               digitalocean_droplet.gh.urn,
-              digitalocean_droplet.db.urn]
+              digitalocean_droplet.db.urn,
+	      digitalocean_loadbalancer.api_loadbalancer.urn
+	      ]
 }
 
 resource "digitalocean_vpc" "sandbox" {
@@ -42,6 +44,28 @@ resource "digitalocean_droplet" "bastion" {
    size="s-1vcpu-1gb"
    vpc_uuid=digitalocean_vpc.sandbox.id
    ssh_keys=[digitalocean_ssh_key.admin.fingerprint]
+}
+
+resource "digitalocean_loadbalancer" "api_loadbalancer" {
+   name="rowt-dev-api-loadbalancer"
+   region="sgp1"
+   vpc_uuid=digitalocean_vpc.sandbox.id
+	
+	forwarding_rule {
+	   entry_port=80
+	   entry_protocol="http"
+
+	   target_port=5000
+	   target_protocol="http"
+	}
+
+	healthcheck {
+	   port=80
+	   protocol="http"
+	   path="/route"
+	}
+
+	droplet_ids=[digitalocean_droplet.api.id]
 }
 
 resource "digitalocean_droplet" "api" {
@@ -74,10 +98,17 @@ resource "digitalocean_droplet" "db" {
 resource "local_file" "inventory" {
    filename="hosts"
    content=<<EOT
+   [bastion]	
    ${digitalocean_droplet.bastion.ipv4_address}
-   ${digitalocean_droplet.api.ipv4_address} 
-   ${digitalocean_droplet.gh.ipv4_address}
-   ${digitalocean_droplet.db.ipv4_address}
+   
+	[api]
+	${digitalocean_droplet.api.ipv4_address} 
+  
+	[graphhopper] 
+	${digitalocean_droplet.gh.ipv4_address}
+  
+	[database] 
+	${digitalocean_droplet.db.ipv4_address}
    EOT
 }
 
