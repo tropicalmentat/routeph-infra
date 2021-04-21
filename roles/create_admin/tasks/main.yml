@@ -10,3 +10,7 @@
     state: present
     key: "{{ lookup('file', '/home/rowt_admin/.ssh/id_rsa.pub') }}"
 
+- name: Set timezone to Asia/Manila
+  command: /usr/bin/timedatectl set-timezone Asia/Manila
+  become: yes
+
