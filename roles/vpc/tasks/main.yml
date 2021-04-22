@@ -9,7 +9,13 @@
           regexp: '.*#net.ipv4.ip_forward=1.*'
           replace: 'net.ipv4.ip_forward=1'
 
+# configure NAT
+- name: Install ip tables
+  apt:
+          name: iptables
+          state: present
+          update_cache: yes
+        
 # from https://docs.digitalocean.com/products/networking/vpc/resources/droplet-as-gateway/
-# TODO: Uncomment net.ipv4.ip_forward=1 in /etc/sysctl.conf
 # TODO: Configure NAT by installing and configuring iptables
 # TODO: make NAT rules persistent
