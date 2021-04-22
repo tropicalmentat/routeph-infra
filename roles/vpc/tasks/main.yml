@@ -1,5 +1,13 @@
+# configure bastion droplet
 - name: Enable ip forwarding
   command: sysctl -w net.ipv4.ip_forward=1
+
+- name: Edit /etc/sysctl.conf to enable ip forwarding
+  replace:
+          path: /etc/sysctl.conf
+          backup: yes
+          regexp: '.*#net.ipv4.ip_forward=1.*'
+          replace: 'net.ipv4.ip_forward=1'
 
 # from https://docs.digitalocean.com/products/networking/vpc/resources/droplet-as-gateway/
 # TODO: Uncomment net.ipv4.ip_forward=1 in /etc/sysctl.conf
