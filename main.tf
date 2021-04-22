@@ -22,8 +22,7 @@ resource "digitalocean_project" "sandbox" {
    resources=[digitalocean_droplet.bastion.urn,
               digitalocean_droplet.api.urn,
               digitalocean_droplet.gh.urn,
-              digitalocean_droplet.db.urn,
-	      digitalocean_loadbalancer.api_loadbalancer.urn
+              digitalocean_droplet.db.urn
 	      ]
 }
 
@@ -45,7 +44,7 @@ resource "digitalocean_droplet" "bastion" {
    vpc_uuid=digitalocean_vpc.sandbox.id
    ssh_keys=[digitalocean_ssh_key.admin.fingerprint]
 }
-
+/*
 resource "digitalocean_loadbalancer" "api_loadbalancer" {
    name="rowt-dev-api-loadbalancer"
    region="sgp1"
@@ -67,7 +66,7 @@ resource "digitalocean_loadbalancer" "api_loadbalancer" {
 
 	droplet_ids=[digitalocean_droplet.api.id]
 }
-
+*/
 resource "digitalocean_droplet" "api" {
    name="rowt-dev-api"
    image="ubuntu-20-04-x64"
@@ -101,14 +100,14 @@ resource "local_file" "inventory" {
    [bastion]	
    ${digitalocean_droplet.bastion.ipv4_address}
    
-	[api]
-	${digitalocean_droplet.api.ipv4_address} 
+   [api]
+   ${digitalocean_droplet.api.ipv4_address} 
   
-	[graphhopper] 
-	${digitalocean_droplet.gh.ipv4_address}
+   [graphhopper] 
+   ${digitalocean_droplet.gh.ipv4_address}
   
-	[database] 
-	${digitalocean_droplet.db.ipv4_address}
+   [database] 
+   ${digitalocean_droplet.db.ipv4_address}
    EOT
 }
 

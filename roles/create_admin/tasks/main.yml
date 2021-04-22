@@ -10,6 +10,15 @@
     state: present
     key: "{{ lookup('file', '/home/rowt_admin/.ssh/id_rsa.pub') }}"
 
+# from https://code-maven.com/enable-ansible-passwordless-sudo
+- name: Allow sudo group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
 - name: Set timezone to Asia/Manila
   command: /usr/bin/timedatectl set-timezone Asia/Manila
   become: yes
