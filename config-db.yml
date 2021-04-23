@@ -1,0 +1,6 @@
+---
+- hosts: database
+  user: rowt_admin
+  become: yes
+  roles: 
+     - db

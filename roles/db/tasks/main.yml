@@ -1,0 +1,39 @@
+# https://computingforgeeks.com/how-to-install-postgis-on-ubuntu-debian/
+- name: Update and install upgrades
+  apt:
+          update_cache: yes
+          upgrade: safe
+          state: present
+
+          # only need it when configuring the first time
+          #- name: Reboot
+          #reboot: 
+
+- name: Install gnupg2
+  apt:
+          state: present
+          name: gnupg2
+
+          #- name: Download apt key for postgres 
+          #get_url: 
+          #url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+          #dest: /home/rowt_admin/
+
+- name: Add apt key
+  apt_key:
+          url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+          state: present
+
+- name: Add postgres apt repo
+  apt_repository:
+          repo: deb http://apt.postgresql.org/pub/repos/apt/ focal-pgdg main
+
+- name: Install postgresql-12
+  apt:
+          name: postgresql-12
+          state: present
+
+- name: Install postgresql-12 client
+  apt:
+          name: postgresql-client-12 
+
