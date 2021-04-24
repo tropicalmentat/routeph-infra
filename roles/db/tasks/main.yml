@@ -5,19 +5,19 @@
           upgrade: safe
           state: present
 
-          # only need it when configuring the first time
-          #- name: Reboot
-          #reboot: 
+# only need it when configuring the first time
+- name: Reboot
+reboot: 
 
 - name: Install gnupg2
   apt:
           state: present
           name: gnupg2
 
-          #- name: Download apt key for postgres 
-          #get_url: 
-          #url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
-          #dest: /home/rowt_admin/
+- name: Download apt key for postgres 
+  get_url: 
+          url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+          dest: /home/rowt_admin/
 
 - name: Add apt key
   apt_key:
@@ -28,37 +28,15 @@
   apt_repository:
           repo: deb http://apt.postgresql.org/pub/repos/apt/ focal-pgdg main
 
-- name: Install postgresql-12
-  apt:
-          name: postgresql-12
-          state: present
-
-- name: Install postgresql-12 client
-  apt:
-          name: postgresql-client-12 
-
-- name: Install postgis-3
+- name: Set-up postgres
   apt: 
-          name: postgis
-
-- name: Install postgresql-12-postgis-3
-  apt:
-          name: postgresql-12-postgis-3
-
-- name: Install pip
-  apt:
-          name: python3-pip
-
-- name: Install python3-dev
-  apt:
-          name: python3-dev
-
-- name: Install libpq-dev
-  apt:
-          name: libpq-dev
-
-- name: Check if psycopg2 is installed
-  pip:
-          name: psycopg2
+          name: [postgresql-12,postgresql-client-12]
           state: present
-# TODO: Install postgres module and set-up test databases          
+
+- name: Set-up postgis-3
+  apt: 
+          name: [postgis,postgresql-12-postgis-3]
+
+- name: Set-up python dependencies 
+  apt:
+          name: [python3-pip,python3-dev,libpq-dev,psycopg2]
