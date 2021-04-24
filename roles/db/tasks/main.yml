@@ -44,3 +44,21 @@
 - name: Install postgresql-12-postgis-3
   apt:
           name: postgresql-12-postgis-3
+
+- name: Install pip
+  apt:
+          name: python3-pip
+
+- name: Install python3-dev
+  apt:
+          name: python3-dev
+
+- name: Install libpq-dev
+  apt:
+          name: libpq-dev
+
+- name: Check if psycopg2 is installed
+  pip:
+          name: psycopg2
+          state: present
+# TODO: Install postgres module and set-up test databases          
