@@ -37,3 +37,10 @@
   apt:
           name: postgresql-client-12 
 
+- name: Install postgis-3
+  apt: 
+          name: postgis
+
+- name: Install postgresql-12-postgis-3
+  apt:
+          name: postgresql-12-postgis-3
