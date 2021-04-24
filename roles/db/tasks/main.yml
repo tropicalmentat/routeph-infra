@@ -6,8 +6,8 @@
           state: present
 
 # only need it when configuring the first time
-- name: Reboot
-reboot: 
+#- name: Reboot
+#  reboot: 
 
 - name: Install gnupg2
   apt:
@@ -39,4 +39,22 @@ reboot:
 
 - name: Set-up python dependencies 
   apt:
-          name: [python3-pip,python3-dev,libpq-dev,psycopg2]
+          name: [python3-pip,python3-dev,libpq-dev]
+          state: present
+
+- name: Check if psycopg2 is installed
+  pip:
+          name: psycopg2
+          state: present
+
+#https://stackoverflow.com/questions/25751085/postgresql-failing-peer-authentication-with-ansible
+- name: Install setfacl support
+  become: yes
+  apt: pkg=acl
+
+- name: Set password for postgres
+  become: yes
+  become_user: postgres
+  community.postgresql.postgresql_user:
+          name: postgres
+          password: 'test123'
