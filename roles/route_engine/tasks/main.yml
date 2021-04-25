@@ -1,0 +1,9 @@
+- name: Install java
+  apt: 
+        update_cache: yes
+        name: default-jre
+
+- name: Install maven 
+  apt: 
+        update_cache: yes
+        name: maven
