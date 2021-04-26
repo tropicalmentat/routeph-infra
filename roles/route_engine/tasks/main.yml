@@ -10,10 +10,24 @@
         name: maven
         state: present
 
-        #- name: Clone graphhopper
-        #  command: git clone git://github.com/graphhopper/graphhopper.git
-        #
-- name: Download latest Philippine data from geofabrik
-  get_url:
-          url: http://download.geofabrik.de/asia/philippines-latest.osm.pbf
-          dest: /home/rowt_admin/graphhopper/asia_philippines.pbf
+# TODO: Add conditional for when graphhopper directory already exists
+#- name: Clone graphhopper
+#  command: git clone git://github.com/graphhopper/graphhopper.git
+
+        #- name: Download latest Philippine data from geofabrik
+        #get_url:
+        #  url: http://download.geofabrik.de/asia/philippines-latest.osm.pbf
+        #  dest: /home/rowt_admin/graphhopper/asia_philippines.pbf
+
+- name: Edit java heapsize for graphhopper
+  lineinfile:
+          backup: yes
+          path: /home/rowt_admin/graphhopper/graphhopper.sh
+          regex: '.*-Xmx1000m -Xms1000m.*'
+          state: present
+          line: ': "${JAVA_OPTS:=-Xmx2000m -Xms2000m}"'
+#- name: Deploy graphhopper with philippine data          
+
+# TODO: Edit java heapsize in graphhopper config file
+# TODO: Edit config file to change vehicle profile to bike only
+# TODO: Deploy graphhoppper
