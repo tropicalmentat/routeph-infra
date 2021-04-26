@@ -2,8 +2,18 @@
   apt: 
         update_cache: yes
         name: default-jre
+        state: present
 
 - name: Install maven 
   apt: 
         update_cache: yes
         name: maven
+        state: present
+
+        #- name: Clone graphhopper
+        #  command: git clone git://github.com/graphhopper/graphhopper.git
+        #
+- name: Download latest Philippine data from geofabrik
+  get_url:
+          url: http://download.geofabrik.de/asia/philippines-latest.osm.pbf
+          dest: /home/rowt_admin/graphhopper/asia_philippines.pbf
