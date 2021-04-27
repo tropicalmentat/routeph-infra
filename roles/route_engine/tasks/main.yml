@@ -1,7 +1,7 @@
 - name: Install java
   apt: 
         update_cache: yes
-        name: default-jre
+        name: openjdk-8-jdk 
         state: present
 
 - name: Install maven 
@@ -10,15 +10,21 @@
         name: maven
         state: present
 
-# TODO: Add conditional for when graphhopper directory already exists
-#- name: Clone graphhopper
-#  command: git clone git://github.com/graphhopper/graphhopper.git
+- name: Check if graphhopper directory exists
+  stat:
+          path: /home/rowt_admin/graphhopper
+  register: st 
 
-        #- name: Download latest Philippine data from geofabrik
-        #get_url:
-        #  url: http://download.geofabrik.de/asia/philippines-latest.osm.pbf
-        #  dest: /home/rowt_admin/graphhopper/asia_philippines.pbf
+- name: Clone graphhopper
+  command: git clone git://github.com/graphhopper/graphhopper.git       
+  when: st.stat.exists == False
 
+- name: Download latest Philippine data from geofabrik
+  get_url:
+          url: http://download.geofabrik.de/asia/philippines-latest.osm.pbf
+          dest: /home/rowt_admin/graphhopper/asia_philippines.pbf
+
+# TODO: Explore using replace instead of lineinfile
 - name: Edit java heapsize for graphhopper
   lineinfile:
           backup: yes
@@ -26,8 +32,19 @@
           regex: '.*-Xmx1000m -Xms1000m.*'
           state: present
           line: ': "${JAVA_OPTS:=-Xmx2000m -Xms2000m}"'
-#- name: Deploy graphhopper with philippine data          
 
-# TODO: Edit java heapsize in graphhopper config file
-# TODO: Edit config file to change vehicle profile to bike only
+- name: Unbind application connector from localhost
+  replace:
+          backup: yes
+          path: /home/rowt_admin/graphhopper/config-example.yml
+          regexp: '.*bind_host.*'
+          replace: '#bind_host'
+
+- name: Deploy graphhopper with philippine data          
+  become: yes
+  shell: './graphhopper.sh -a web -i asia_philippines.pbf --port 80 -d'
+  args:
+          chdir: /home/rowt_admin/graphhopper
+# TODO: Change  
 # TODO: Deploy graphhoppper
+# TODO: Edit config file to change vehicle profile to bike only
