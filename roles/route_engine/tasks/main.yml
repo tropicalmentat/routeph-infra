@@ -19,10 +19,16 @@
   command: git clone git://github.com/graphhopper/graphhopper.git       
   when: st.stat.exists == False
 
+- name: Check if asia_philippines.pbf exists
+  stat:
+          path: /home/rowt_admin/graphhopper/asia_philippines.pbf
+  register: osm_ph
+
 - name: Download latest Philippine data from geofabrik
   get_url:
           url: http://download.geofabrik.de/asia/philippines-latest.osm.pbf
           dest: /home/rowt_admin/graphhopper/asia_philippines.pbf
+  when: osm_ph.stat.exists == False
 
 # TODO: Explore using replace instead of lineinfile
 - name: Edit java heapsize for graphhopper
@@ -40,11 +46,29 @@
           regexp: '.*bind_host.*'
           replace: '#bind_host'
 
+# TODO: Deploy as daemon
 - name: Deploy graphhopper with philippine data          
   become: yes
-  shell: './graphhopper.sh -a web -i asia_philippines.pbf --port 80 -d'
-  args:
-          chdir: /home/rowt_admin/graphhopper
-# TODO: Change  
+  shell: 
+        cmd: nohup ./graphhopper.sh -a web -i asia_philippines.pbf --port 80 
+        chdir: /home/rowt_admin/graphhopper
+  environment:
+          JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64/jre
+        #  async: 30
+        #poll: 0
+  register: deploy 
+ 
+- name: Print deploy outcome
+  debug:
+          var: deploy 
+        #- name: Check on async deploy of graphhopper
+        #  async_status:
+        #          jid: "{{ deploy.ansible_job_id }}"
+        #  register: job_result
+        #  until: job_result.finished
+        #  retries: 100
+        #  delay: 10
+
+
 # TODO: Deploy graphhoppper
 # TODO: Edit config file to change vehicle profile to bike only
