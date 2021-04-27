@@ -54,21 +54,9 @@
         chdir: /home/rowt_admin/graphhopper
   environment:
           JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64/jre
-        #  async: 30
-        #poll: 0
+  async: 1000
+  poll: 0
   register: deploy 
  
-- name: Print deploy outcome
-  debug:
-          var: deploy 
-        #- name: Check on async deploy of graphhopper
-        #  async_status:
-        #          jid: "{{ deploy.ansible_job_id }}"
-        #  register: job_result
-        #  until: job_result.finished
-        #  retries: 100
-        #  delay: 10
-
-
 # TODO: Deploy graphhoppper
 # TODO: Edit config file to change vehicle profile to bike only
