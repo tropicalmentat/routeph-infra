@@ -5,9 +5,9 @@
           upgrade: safe
           state: present
 
-# only need it when configuring the first time
-#- name: Reboot
-#  reboot: 
+#only need it when configuring the first time
+- name: Reboot
+  reboot: 
 
 - name: Install gnupg2 
   apt: 
@@ -55,38 +55,38 @@
 - name: Set password for postgres
   become: yes
   become_user: postgres
-  community.postgresql.postgresql_user:
+  postgresql_user:
           name: postgres
           password: 'test123'
 
 - name: Create rowt_admin db user
   become: yes
   become_user: postgres
-  community.postgresql.postgresql_user:
+  postgresql_user:
           name: rowt_admin
           password: test#124$
           role_attr_flags: CREATEDB,SUPERUSER
 
 - name: Create rowt_db
   become_user: rowt_admin
-  community.postgresql.postgresql_db:
+  postgresql_db:
           login_user: rowt_admin
           login_password: test#124$
           name: rowt_db
           owner: rowt_admin
 
-          #- name: Enable postgis extension in rowt_db
-          #  become_user: rowt_admin
-          #  community.postgresql.postgresql_query: 
-          #          login_user: rowt_admin 
-          #          login_password: test#124$
-          #          db: rowt_db
-          #          query: CREATE EXTENSION postgis
-          #
+- name: Enable postgis extension in rowt_db
+  become_user: rowt_admin
+  postgresql_query: 
+          login_user: rowt_admin 
+          login_password: test#124$
+          db: rowt_db
+          query: CREATE EXTENSION postgis
+
 # convert this into handler
 - name: Check postgis version
   become_user: rowt_admin 
-  community.postgresql.postgresql_query: 
+  postgresql_query: 
           login_user: rowt_admin 
           login_password: test#124$
           db: rowt_db
