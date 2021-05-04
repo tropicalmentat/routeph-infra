@@ -95,3 +95,13 @@
 
 - debug:
         var: result 
+
+- name: Install osm2pgsql
+  apt:
+          name: osm2pgsql
+          state: present
+
+- name: Download latest philippine data
+  get_url:
+          url: https://download.geofabrik.de/asia/philippines-latest.osm.pbf
+          dest: /home/rowt_admin
