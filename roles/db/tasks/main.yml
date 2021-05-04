@@ -96,6 +96,14 @@
 - debug:
         var: result 
 
+- name: Enable hstore extension in rowt_db
+  become_user: rowt_admin
+  postgresql_query: 
+          login_user: rowt_admin 
+          login_password: test#124$
+          db: rowt_db
+          query: CREATE EXTENSION hstore 
+
 - name: Install osm2pgsql
   apt:
           name: osm2pgsql
@@ -105,3 +113,11 @@
   get_url:
           url: https://download.geofabrik.de/asia/philippines-latest.osm.pbf
           dest: /home/rowt_admin
+
+- name: Load data into rowt_db
+  become: yes
+  shell:
+          cmd: nohup osm2pgsql -d rowt_db -j -c -C=1200 -s philippines-latest.osm.pbf >> load.log
+  async: 100000
+  poll: 0
+  register: load
