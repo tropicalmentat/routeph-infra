@@ -119,6 +119,7 @@
   
 
 - name: Load data into rowt_db
+  become_user: rowt_admin
   command: osm2pgsql -d rowt_db -j -c -C=1200 -s philippines-latest.osm.pbf 
   async: 100000
   poll: 0
