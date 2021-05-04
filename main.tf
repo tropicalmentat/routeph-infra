@@ -103,7 +103,7 @@ resource "local_file" "inventory" {
    [api]
    ${digitalocean_droplet.api.ipv4_address} 
   
-   [graphhopper] 
+   [route_engine] 
    ${digitalocean_droplet.gh.ipv4_address}
   
    [database] 
