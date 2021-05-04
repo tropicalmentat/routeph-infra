@@ -89,7 +89,7 @@ resource "digitalocean_droplet" "db" {
    name="rowt-dev-db"
    image="ubuntu-20-04-x64"
    region="sgp1"
-   size="s-1vcpu-1gb"
+   size="s-2vcpu-4gb"
    vpc_uuid=digitalocean_vpc.sandbox.id
    ssh_keys=[digitalocean_ssh_key.admin.fingerprint]
 }
