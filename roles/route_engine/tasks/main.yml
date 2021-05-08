@@ -1,4 +1,10 @@
-- name: Install java
+- name: Install openjdk8-jre
+  apt:
+          update_cache: yes
+          name: openjdk-8-jre
+          state: present
+
+- name: Install openjdk8-jdk 
   apt: 
         update_cache: yes
         name: openjdk-8-jdk 
@@ -47,16 +53,15 @@
           replace: '#bind_host'
 
 # TODO: Deploy as daemon
+# Need to rerun the task after the first pass to build graph and deploy api. Find another way to deploy more cleanly
 - name: Deploy graphhopper with philippine data          
   become: yes
   shell: 
-        cmd: nohup ./graphhopper.sh -a web -i asia_philippines.pbf --port 80 
+        cmd: nohup bash graphhopper.sh -a web -i asia_philippines.pbf --port 80 &
         chdir: /home/rowt_admin/graphhopper
-  environment:
-          JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64/jre
-  async: 1000
-  poll: 0
-  register: deploy 
+        #environment:
+        #JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64/jre
+        #register: deploy 
  
 # TODO: Deploy graphhoppper
 # TODO: Edit config file to change vehicle profile to bike only
