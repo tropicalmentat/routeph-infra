@@ -3,4 +3,4 @@
 *.swp
 *.log
 hosts
-*add_host.sh
+*add_host*
