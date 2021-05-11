@@ -1,0 +1,6 @@
+---
+- hosts: reverse_proxy
+  user: rowt_admin
+  become: yes
+  roles:
+     - reverse_proxy
