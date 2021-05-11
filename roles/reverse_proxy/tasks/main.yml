@@ -1,5 +1,8 @@
 - name: Install nginx
   apt:
-	update_cache: yes
-	name: nginx
-	state: present
+          update_cache: yes
+          name: nginx
+          state: present
+
+# TODO: Make template for nginx sites-enabled config
+# https://graspingtech.com/ansible-nginx-static-site/
