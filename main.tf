@@ -22,7 +22,8 @@ resource "digitalocean_project" "sandbox" {
    resources=[digitalocean_droplet.bastion.urn,
               digitalocean_droplet.api.urn,
               digitalocean_droplet.gh.urn,
-              digitalocean_droplet.db.urn
+              digitalocean_droplet.db.urn,
+				  digitalocean_droplet.rp.urn
 	      ]
 }
 
@@ -67,6 +68,16 @@ resource "digitalocean_loadbalancer" "api_loadbalancer" {
 	droplet_ids=[digitalocean_droplet.api.id]
 }
 */
+resource "digitalocean_droplet" "rp" {
+	name="rowt-dev-rp"
+	image="ubuntu-20-04-x64"
+	region="sgp1"
+	size="s-1vcpu-1gb"
+	vpc_uuid=digitalocean_vpc.sandbox.id
+	ssh_keys=[digitalocean_ssh_key.admin.fingerprint]
+
+}
+
 resource "digitalocean_droplet" "api" {
    name="rowt-dev-api"
    image="ubuntu-20-04-x64"
@@ -108,6 +119,9 @@ resource "local_file" "inventory" {
   
    [database] 
    ${digitalocean_droplet.db.ipv4_address}
+
+   [reverse_proxy]
+   ${digitalocean_droplet.rp.ipv4_address}
    EOT
 }
 
@@ -115,6 +129,7 @@ resource "local_file" "host_script" {
    filename="./add_hosts.sh"
    content=<<EOT
    echo "Setting SSH Key"
+	eval "$(ssh-agent)"
    ssh-add /home/rowt_admin/.ssh/id_rsa
    echo "Adding IPs"
 
@@ -122,6 +137,7 @@ resource "local_file" "host_script" {
    ssh-keyscan -H ${digitalocean_droplet.api.ipv4_address} >> ~/.ssh/known_hosts
    ssh-keyscan -H ${digitalocean_droplet.gh.ipv4_address} >> ~/.ssh/known_hosts 
    ssh-keyscan -H ${digitalocean_droplet.db.ipv4_address} >> ~/.ssh/known_hosts
+	ssh-keyscan -H ${digitalocean_droplet.rp.ipv4_address} >> ~/.ssh/known_hosts
 
    EOT
 }
