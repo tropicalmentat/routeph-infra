@@ -19,7 +19,8 @@ variable "pvtkey_path" {
 
 resource "digitalocean_project" "sandbox" {
    name="rowt-sandbox"
-   resources=[digitalocean_droplet.bastion.urn,
+   resources=[digitalocean_domain.rowt.urn,
+				  digitalocean_droplet.bastion.urn,
               digitalocean_droplet.api.urn,
               digitalocean_droplet.gh.urn,
               digitalocean_droplet.db.urn,
@@ -140,6 +141,17 @@ resource "local_file" "host_script" {
 	ssh-keyscan -H ${digitalocean_droplet.rp.ipv4_address} >> ~/.ssh/known_hosts
 
    EOT
+}
+
+resource "digitalocean_domain" "rowt" {
+	name="rowt.ph"
+}
+
+resource "digitalocean_record" "test" {
+	domain = digitalocean_domain.rowt.name
+	type = "A"
+	name = "test"
+	value = digitalocean_droplet.rp.ipv4_address
 }
 
 output "ssh_public_key" {
