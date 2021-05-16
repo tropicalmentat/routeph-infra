@@ -1,0 +1,22 @@
+- name: Install virtualenv
+  apt:
+          name: python3-virtualenv
+          state: present
+
+- name: Clone API repo
+  git:
+          repo: https://gitlab.com/tropicalmentat/rowt-api.git
+          dest: /home/rowt_admin/rowt-api
+          update: no
+
+- name: Pip install requirements
+  pip:
+          requirements: /home/rowt_admin/rowt-api/requirements.txt
+          virtualenv_command: virtualenv
+          virtualenv: /home/rowt_admin/rowt-api/api-venv
+
+          #- name: Set environment variables
+  
+
+- name: Run flask dev server
+  command: /home/rowt_admin/rowt-api/api-venv/bin/flask run

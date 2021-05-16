@@ -1,0 +1,6 @@
+---
+- hosts: api
+  user: rowt_admin
+  become: yes
+  roles:
+          - api
