@@ -3,20 +3,41 @@
           name: python3-virtualenv
           state: present
 
+- name: Install psycopg2 dependency libpq-dev
+  apt: 
+          name: libpq-dev
+          state: present
+
 - name: Clone API repo
+  become_user: rowt_admin
   git:
           repo: https://gitlab.com/tropicalmentat/rowt-api.git
           dest: /home/rowt_admin/rowt-api
           update: no
 
 - name: Pip install requirements
+  become_user: rowt_admin
+  become: yes
   pip:
           requirements: /home/rowt_admin/rowt-api/requirements.txt
           virtualenv_command: virtualenv
           virtualenv: /home/rowt_admin/rowt-api/api-venv
 
-          #- name: Set environment variables
-  
+- name: Set environment variables
+  become_user: rowt_admin
+  blockinfile:
+          path: /home/rowt_admin/.profile
+          block: |
+                  export DATABASE=rowt_db
+                  export HOSTNAME=159.65.12.152
+                  export PORT=5432
+                  export DATABASE_USERNAME=rowt_admin
+                  export DATABASE_PASSWORD=test#123$
+                  export FLASK_APP=index.py
+                  export FLASK_ENV=development 
 
 - name: Run flask dev server
-  command: /home/rowt_admin/rowt-api/api-venv/bin/flask run
+  become_user: rowt_admin
+  become: yes
+  shell: 
+        cmd: . /home/rowt_admin/rowt-api/api-venv/bin/activate && flask run
