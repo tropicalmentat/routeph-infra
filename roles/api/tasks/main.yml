@@ -1,5 +1,6 @@
 - name: Install virtualenv
   apt:
+          update_cache: yes
           name: python3-virtualenv
           state: present
 
@@ -23,21 +24,19 @@
           virtualenv_command: virtualenv
           virtualenv: /home/rowt_admin/rowt-api/api-venv
 
-- name: Set environment variables
-  become_user: rowt_admin
-  blockinfile:
-          path: /home/rowt_admin/.profile
-          block: |
-                  export DATABASE=rowt_db
-                  export HOSTNAME=159.65.12.152
-                  export PORT=5432
-                  export DATABASE_USERNAME=rowt_admin
-                  export DATABASE_PASSWORD=test#123$
-                  export FLASK_APP=index.py
-                  export FLASK_ENV=development 
-
+          #- name: Set environment variables
+          #  become_user: rowt_admin
+          #  blockinfile:
+          #          path: /home/rowt_admin/.profile
+          #          block: |
+          #                  export FLASK_APP=index.py
+          #                  export FLASK_ENV=development 
+          #
 - name: Run flask dev server
   become_user: rowt_admin
   become: yes
   shell: 
-        cmd: . /home/rowt_admin/rowt-api/api-venv/bin/activate && flask run
+        cmd: . /home/rowt_admin/rowt-api/api-venv/bin/activate && nohup flask run --host '0.0.0.0' >/dev/null 2>&1 &
+
+# TODO: Add template file for .env
+# TODO: Install nginx and deploy api as site
