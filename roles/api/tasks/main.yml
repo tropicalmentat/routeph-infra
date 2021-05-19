@@ -34,9 +34,13 @@
           #
 - name: Run flask dev server
   become_user: rowt_admin
-  become: yes
+  #become: yes
   shell: 
-        cmd: . /home/rowt_admin/rowt-api/api-venv/bin/activate && nohup flask run --host '0.0.0.0' >/dev/null 2>&1 &
+  #      cmd: . /home/rowt_admin/rowt-api/api-venv/bin/activate && nohup flask run --host '0.0.0.0' >/dev/null 2>&1 &
+        cmd: nohup flask run --host '0.0.0.0' >/dev/null 2>&1 &
 
-# TODO: Add template file for .env
+
+# TODO: Install gunicorn  
+# TODO: Add template file for .env. Think of building .env template using terraform
 # TODO: Install nginx and deploy api as site
+# https://dev.to/brandonwallace/deploy-flask-the-easy-way-with-gunicorn-and-nginx-jgc
