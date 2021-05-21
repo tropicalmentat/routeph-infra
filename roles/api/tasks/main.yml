@@ -1,6 +1,11 @@
+- name: Install nginx
+  apt:
+          name: nginx
+          update_cache: yes
+          state: present
+
 - name: Install virtualenv
   apt:
-          update_cache: yes
           name: python3-virtualenv
           state: present
 
@@ -9,20 +14,27 @@
           name: libpq-dev
           state: present
 
+- name: Make www directory
+  become: yes
+  file:
+          path: /var/www
+          state: directory
+
 - name: Clone API repo
-  become_user: rowt_admin
+  #become_user: rowt_admin
+  become: yes
   git:
           repo: https://gitlab.com/tropicalmentat/rowt-api.git
-          dest: /home/rowt_admin/rowt-api
+          dest: /var/www/rowt-api
           update: no
 
 - name: Pip install requirements
-  become_user: rowt_admin
+  #become_user: rowt_admin
   become: yes
   pip:
-          requirements: /home/rowt_admin/rowt-api/requirements.txt
+          requirements: /var/www/rowt-api/requirements.txt
           virtualenv_command: virtualenv
-          virtualenv: /home/rowt_admin/rowt-api/api-venv
+          virtualenv: /var/www/rowt-api/api-venv
 
           #- name: Set environment variables
           #  become_user: rowt_admin
@@ -31,16 +43,24 @@
           #          block: |
           #                  export FLASK_APP=index.py
           #                  export FLASK_ENV=development 
-          #
+                            
+- name: Change ownership of api filestructure
+  file:
+          path: /var/www/rowt-api
+          state: directory
+          recurse: yes
+          owner: rowt_admin
+          group: sudo
+
 - name: Run flask dev server
   become_user: rowt_admin
   #become: yes
   shell: 
   #      cmd: . /home/rowt_admin/rowt-api/api-venv/bin/activate && nohup flask run --host '0.0.0.0' >/dev/null 2>&1 &
-        cmd: nohup flask run --host '0.0.0.0' >/dev/null 2>&1 &
+        cmd: nohup /home/rowt_admin/rowt-api/api-venv/bin/flask run --host '0.0.0.0' >/dev/null 2>&1 &
 
-
-# TODO: Install gunicorn  
+# TODO: Configure gunicorn
 # TODO: Add template file for .env. Think of building .env template using terraform
 # TODO: Install nginx and deploy api as site
 # https://dev.to/brandonwallace/deploy-flask-the-easy-way-with-gunicorn-and-nginx-jgc
+# https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
