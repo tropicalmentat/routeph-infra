@@ -59,8 +59,9 @@
   #      cmd: . /home/rowt_admin/rowt-api/api-venv/bin/activate && nohup flask run --host '0.0.0.0' >/dev/null 2>&1 &
         cmd: nohup /home/rowt_admin/rowt-api/api-venv/bin/flask run --host '0.0.0.0' >/dev/null 2>&1 &
 
+# TODO: Add task for creating gunicorn daemon for project as indicated here: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
 # TODO: Configure gunicorn
+# TODO: Configure nginx as reverse proxy for gunicorn
 # TODO: Add template file for .env. Think of building .env template using terraform
-# TODO: Install nginx and deploy api as site
 # https://dev.to/brandonwallace/deploy-flask-the-easy-way-with-gunicorn-and-nginx-jgc
 # https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
