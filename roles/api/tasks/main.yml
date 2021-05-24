@@ -1,3 +1,9 @@
+#- name: Set environmental variables
+#  environment:
+#          DATABASE = 159.65.12.152
+#  debug:
+#          msg: "{{ ansible_env }}"
+
 - name: Install nginx
   apt:
           name: nginx
@@ -36,13 +42,18 @@
           virtualenv_command: virtualenv
           virtualenv: /var/www/rowt-api/api-venv
 
-          #- name: Set environment variables
-          #  become_user: rowt_admin
-          #  blockinfile:
-          #          path: /home/rowt_admin/.profile
-          #          block: |
-          #                  export FLASK_APP=index.py
-          #                  export FLASK_ENV=development 
+# TODO: Use template for this
+- name: Set environment variables
+  become_user: rowt_admin
+  blockinfile:
+          path: /home/rowt_admin/.profile
+          block: |
+                  export FLASK_APP=index.py
+                  export FLASK_ENV=development 
+                  export HOSTNAME="159.65.12.152"
+                  export DATABASE="rowt_db"
+                  export DATABASE_USERNAME="rowt_admin"
+                  export DATABASE_PASSWORD="test#124$" 
                             
 - name: Change ownership of api filestructure
   file:
@@ -50,17 +61,20 @@
           state: directory
           recurse: yes
           owner: rowt_admin
-          group: sudo
+          group: www-data
 
-- name: Run flask dev server
-  become_user: rowt_admin
-  #become: yes
-  shell: 
-  #      cmd: . /home/rowt_admin/rowt-api/api-venv/bin/activate && nohup flask run --host '0.0.0.0' >/dev/null 2>&1 &
-        cmd: nohup /home/rowt_admin/rowt-api/api-venv/bin/flask run --host '0.0.0.0' >/dev/null 2>&1 &
+- name: Add rowt-api service to systemd
+  become: yes
+  copy:
+          src: templates/rowt-api.service
+          dest: /etc/systemd/system/rowt-api.service
+          owner: root
+          group: root
+
 
 # TODO: Add task for creating gunicorn daemon for project as indicated here: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
-# TODO: Configure gunicorn
+# TODO: Deploy credentials as environmental variables instead of .env
+# TODO: Deploy project daemon as service. Use built in service module
 # TODO: Configure nginx as reverse proxy for gunicorn
 # TODO: Add template file for .env. Think of building .env template using terraform
 # https://dev.to/brandonwallace/deploy-flask-the-easy-way-with-gunicorn-and-nginx-jgc
