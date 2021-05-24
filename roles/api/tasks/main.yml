@@ -71,6 +71,14 @@
           owner: root
           group: root
 
+- name: Add nginx config for rowt-api to sites-available
+  become: yes
+  copy:
+          src: templates/rowt-api
+          dest: /etc/nginx/sites-available/rowt-api
+          owner: root 
+          group: root
+
 
 # TODO: Add task for creating gunicorn daemon for project as indicated here: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
 # TODO: Deploy credentials as environmental variables instead of .env
