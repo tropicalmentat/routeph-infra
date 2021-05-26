@@ -1,3 +1,19 @@
+- name: Add rowt-api service to systemd
+  become: yes
+  copy:
+          src: templates/rowt-api.service
+          dest: /etc/systemd/system/rowt-api.service
+          owner: root
+          group: root
+
+
+- name: Add nginx template config for rowt-api
+  template:
+          src: templates/rowt-api.j2
+          dest: /etc/nginx/sites-available/rowt-api
+          owner: root
+          group: root
+
 - debug:
         var: ansible_facts["eth0"]["ipv4"]["address"]
 
@@ -59,22 +75,6 @@
           recurse: yes
           owner: rowt_admin
           group: www-data
-
-- name: Add rowt-api service to systemd
-  become: yes
-  copy:
-          src: templates/rowt-api.service
-          dest: /etc/systemd/system/rowt-api.service
-          owner: root
-          group: root
-
-- name: Add nginx config for rowt-api to sites-available
-  become: yes
-  copy:
-          src: templates/rowt-api
-          dest: /etc/nginx/sites-available/rowt-api
-          owner: root 
-          group: root
 
 - name: Create symbolic link of sites-available to sites-enabled
   become: yes
