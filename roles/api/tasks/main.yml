@@ -1,8 +1,6 @@
-#- name: Set environmental variables
-#  environment:
-#          DATABASE = 159.65.12.152
-#  debug:
-#          msg: "{{ ansible_env }}"
+- debug:
+        var: ansible_facts["eth0"]["ipv4"]["address"]
+
 
 - name: Install nginx
   apt:
@@ -48,9 +46,8 @@
   blockinfile:
           path: /home/rowt_admin/.profile
           block: |
-                  export FLASK_APP=index.py
-                  export FLASK_ENV=development 
                   export HOSTNAME="159.65.12.152"
+                  export PORT="5432"
                   export DATABASE="rowt_db"
                   export DATABASE_USERNAME="rowt_admin"
                   export DATABASE_PASSWORD="test#124$" 
