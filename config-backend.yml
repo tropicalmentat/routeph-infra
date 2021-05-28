@@ -18,3 +18,36 @@
                     databases: rowt_db
                     method: md5
             when: "'db' in inventory_hostname"
+            notify: "restart postgres"
+            
+
+            #          - name: Allow postgres service to listen to traffic from API server
+            #            postgresql_set:
+            #                    name: listen_addresses
+            #                    login_user: rowt_admin
+            #                    login_password: "test#124$"
+            #                    db: rowt_db
+            #                    value: "*"
+            #            when: "'db' in inventory_hostname"
+            #            notify: "restart postgres"
+
+          - name: Allow postgres service to listen to traffic from API server
+            lineinfile:
+                    backup: yes
+                    path: /etc/postgresql/12/main/postgresql.conf
+                    regex: '.*listen_addresses.*'
+                    state: present
+                    line: 'listen_addresses="*"'
+            when: "'db' in inventory_hostname"
+            notify: "restart postgres"
+
+
+  handlers:
+          - name: Restart postgres service
+            service:
+                    name: postgresql
+                    state: restarted
+            listen: "restart postgres"
+# TODO: Configure postgresql.conf
+# TODO: Configure reverse proxy configs
+# TODO: Add handlers to restart nginx and postgres services
