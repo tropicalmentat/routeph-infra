@@ -1,6 +1,6 @@
 ---
 - name: Configure DB for backend
-  hosts: database:api:route_engine:reverse_proxy
+  hosts: database:api:reverse_proxy
   remote_user: rowt_admin
   become: yes
 
