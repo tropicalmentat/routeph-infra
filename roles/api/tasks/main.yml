@@ -6,6 +6,11 @@
           owner: root
           group: root
 
+- name: Install nginx
+  apt:
+          name: nginx
+          update_cache: yes
+          state: present
 
 - name: Add nginx template config for rowt-api
   template:
@@ -14,12 +19,6 @@
           owner: root
           group: root
 
-
-- name: Install nginx
-  apt:
-          name: nginx
-          update_cache: yes
-          state: present
 
 - name: Install virtualenv
   apt:
