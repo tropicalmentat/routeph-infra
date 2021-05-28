@@ -72,6 +72,7 @@
           dest: /var/www/rowt-api
           owner: root
           group: root
+  notify: "restart rowt-api"
 
                            
 - name: Change ownership of api filestructure
@@ -81,6 +82,7 @@
           recurse: yes
           owner: rowt_admin
           group: www-data
+  notify: "restart nginx"
 
 - name: Create symbolic link of sites-available to sites-enabled
   become: yes
@@ -90,7 +92,8 @@
           owner: root
           group: root
           state: link
-
+  notify: "restart nginx"
+ 
 
 # TODO: Add task for creating gunicorn daemon for project as indicated here: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
 # TODO: Deploy credentials as environmental variables instead of .env
