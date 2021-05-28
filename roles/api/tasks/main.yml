@@ -14,9 +14,6 @@
           owner: root
           group: root
 
-- debug:
-        var: ansible_facts["eth0"]["ipv4"]["address"]
-
 
 - name: Install nginx
   apt:
@@ -57,17 +54,26 @@
           virtualenv: /var/www/rowt-api/api-venv
 
 # TODO: Use template for this
-- name: Set environment variables
-  become_user: rowt_admin
-  blockinfile:
-          path: /home/rowt_admin/.profile
-          block: |
-                  export HOSTNAME="159.65.12.152"
-                  export PORT="5432"
-                  export DATABASE="rowt_db"
-                  export DATABASE_USERNAME="rowt_admin"
-                  export DATABASE_PASSWORD="test#124$" 
-                            
+#- name: Set environment variables
+#  become_user: rowt_admin
+#  blockinfile:
+#          path: /home/rowt_admin/.profile
+#          block: |
+#                  export HOSTNAME="159.65.12.152"
+#                  export PORT="5432"
+#                  export DATABASE="rowt_db"
+#                  export DATABASE_USERNAME="rowt_admin"
+#                  export DATABASE_PASSWORD="test#124$" 
+
+- name: Add gunicorn environment variables
+  become: yes
+  copy:
+          src: templates/.env
+          dest: /var/www/rowt-api
+          owner: root
+          group: root
+
+                           
 - name: Change ownership of api filestructure
   file:
           path: /var/www/rowt-api
