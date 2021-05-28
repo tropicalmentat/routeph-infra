@@ -1,0 +1,14 @@
+server {
+	listen 80;
+	server_name {{ ansible_facts.eth0.ipv4.address }};
+
+	location / {
+		include proxy_params;
+		proxy_pass http://unix:/var/www/rowt-api/rowt-api.sock;
+
+	}
+	location /get-bike-parking {
+		include proxy_params;
+		proxy_pass http://unix:/var/www/rowt-api/rowt-api.sock;
+	}
+}
