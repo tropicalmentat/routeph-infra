@@ -1,13 +1,18 @@
 ---
 - name: Configure DB for backend
-  hosts: database:api
+  hosts: database:api:route_engine
   remote_user: rowt_admin
   become: yes
 
   tasks:
-          - debug:
-                  var: hostvars['db']['ansible_facts']['eth0']['ipv4']['address']
-            when: "'api' in inventory_hostname"
+          - name: Add reverse_proxy nginx configuration
+            template:
+                    src: templates/rowt.j2
+                    dest: /etc/nginx/sites-available/rowt
+                    owner: root
+                    group: root
+            when: "'rp' in inventory_hostname"
+            notify: "restart nginx"
 
           - name: Allow API server to access db
             postgresql_pg_hba:
@@ -48,6 +53,13 @@
                     name: postgresql
                     state: restarted
             listen: "restart postgres"
+
+          - name: Restart nginx service
+            service:
+                    name: nginx
+                    state: restarted
+            listen: "restart nginx"
+
 # TODO: Configure postgresql.conf
 # TODO: Configure reverse proxy configs
 # TODO: Add handlers to restart nginx and postgres services

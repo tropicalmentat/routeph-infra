@@ -4,5 +4,13 @@
           name: nginx
           state: present
 
+- name: Make www dir for rowt frontend
+  become: yes
+  file:
+          path: /var/www/rowt
+          state: directory
+
+
 # TODO: Make template for nginx sites-enabled config
+# TODO: Need to find a way to use ip addresses of provisioned infra as var
 # https://graspingtech.com/ansible-nginx-static-site/

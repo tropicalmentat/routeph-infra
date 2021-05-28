@@ -1,9 +1,15 @@
 server {
 	listen 80;
 	listen [::]:80;
-	server_name {{ domain }};
+	server_name {{ hostvars.rp.ansible_facts.eth0.ipv4.address }};
 
-	location / {
-		proxy_pass http://{{ rp_ip }};
+	root /var/www/rowt
+
+	location /route {
+		proxy_pass http://{{ hostvars.re.ansible_facts.eth0.ipv4.address }};
+	}
+
+	location /get-bike-parking {
+		proxy_pass http://{{ hostvars.api.ansible_facts.eth0.ipv4.address }};
 	}
 }
