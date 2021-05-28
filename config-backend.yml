@@ -1,6 +1,6 @@
 ---
 - name: Configure DB for backend
-  hosts: database:api:route_engine
+  hosts: database:api:route_engine:reverse_proxy
   remote_user: rowt_admin
   become: yes
 
@@ -68,7 +68,25 @@
             when: "'api' in inventory_hostname"
             notify: "restart nginx"
 
+          - name: Add reverse proxy config
+            template:
+                    src: templates/rowt.j2
+                    dest: /etc/nginx/sites-available/rowt
+                    owner: root
+                    group: root
+            when: "'rp' in inventory_hostname"
+            notify: "restart nginx"
 
+          - name: Create symbolic link of rowt frontend to sites-enabled
+            become: yes
+            file:
+                    src: /etc/nginx/sites-available/rowt
+                    dest: /etc/nginx/sites-enabled/rowt
+                    owner: root
+                    group: root
+                    state: link
+            when: "'rp' in inventory_hostname"
+            notify: "restart nginx"
 
   handlers:
           - name: Restart postgres service
