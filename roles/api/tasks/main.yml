@@ -52,48 +52,6 @@
           virtualenv_command: virtualenv
           virtualenv: /var/www/rowt-api/api-venv
 
-# TODO: Use template for this
-#- name: Set environment variables
-#  become_user: rowt_admin
-#  blockinfile:
-#          path: /home/rowt_admin/.profile
-#          block: |
-#                  export HOSTNAME="159.65.12.152"
-#                  export PORT="5432"
-#                  export DATABASE="rowt_db"
-#                  export DATABASE_USERNAME="rowt_admin"
-#                  export DATABASE_PASSWORD="test#124$" 
-
-- name: Add gunicorn environment variables
-  become: yes
-  copy:
-          src: templates/.env
-          dest: /var/www/rowt-api
-          owner: root
-          group: root
-  notify: "restart rowt-api"
-
-                           
-- name: Change ownership of api filestructure
-  file:
-          path: /var/www/rowt-api
-          state: directory
-          recurse: yes
-          owner: rowt_admin
-          group: www-data
-  notify: "restart nginx"
-
-- name: Create symbolic link of sites-available to sites-enabled
-  become: yes
-  file:
-          src: /etc/nginx/sites-available/rowt-api
-          dest: /etc/nginx/sites-enabled/rowt-api
-          owner: root
-          group: root
-          state: link
-  notify: "restart nginx"
- 
-
 # TODO: Add task for creating gunicorn daemon for project as indicated here: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
 # TODO: Deploy credentials as environmental variables instead of .env
 # TODO: Deploy project daemon as service. Use built in service module

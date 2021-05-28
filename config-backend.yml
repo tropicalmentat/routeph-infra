@@ -25,16 +25,17 @@
             when: "'db' in inventory_hostname"
             notify: "restart postgres"
             
-
-            #          - name: Allow postgres service to listen to traffic from API server
-            #            postgresql_set:
-            #                    name: listen_addresses
-            #                    login_user: rowt_admin
-            #                    login_password: "test#124$"
-            #                    db: rowt_db
-            #                    value: "*"
-            #            when: "'db' in inventory_hostname"
-            #            notify: "restart postgres"
+          - name: Add gunicorn environment variables
+            become: yes
+            template:
+                    src: templates/gunicorn_env.j2
+                    dest: /var/www/rowt-api/.env
+                    owner: rowt_admin
+                    group: www-data 
+            when: '"api" in inventory_hostname'
+            notify: 
+                - "restart rowt-api"
+                - "daemon-reload"
 
           - name: Allow postgres service to listen to traffic from API server
             lineinfile:
@@ -42,9 +43,31 @@
                     path: /etc/postgresql/12/main/postgresql.conf
                     regex: '.*listen_addresses.*'
                     state: present
-                    line: 'listen_addresses="*"'
+                    line: "listen_addresses='*'"
             when: "'db' in inventory_hostname"
             notify: "restart postgres"
+
+          - name: Change ownership of api filestructure
+            file:
+                    path: /var/www/rowt-api
+                    state: directory
+                    recurse: yes
+                    owner: rowt_admin
+                    group: www-data
+            when: "'api' in inventory_hostname"
+            notify: "restart nginx"
+          
+          - name: Create symbolic link of sites-available to sites-enabled
+            become: yes
+            file:
+                    src: /etc/nginx/sites-available/rowt-api
+                    dest: /etc/nginx/sites-enabled/rowt-api
+                    owner: root
+                    group: root
+                    state: link
+            when: "'api' in inventory_hostname"
+            notify: "restart nginx"
+
 
 
   handlers:
@@ -59,6 +82,17 @@
                     name: nginx
                     state: restarted
             listen: "restart nginx"
+
+          - name: Restart rowt-api service
+            service:
+                    name: rowt-api
+                    state: restarted
+            listen: "restart rowt-api"
+
+          - name: reload systemd daemon
+            systemd:
+                    daemon_reload: yes
+            listen: "daemon-reload"
 
 # TODO: Configure postgresql.conf
 # TODO: Configure reverse proxy configs

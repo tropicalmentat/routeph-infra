@@ -1,4 +1,4 @@
-HOSTNAME= {{ hostvars['db']['ansible_facts']['eth0']['ipv4']['address'] }}
+HOSTNAME="{{hostvars['db']['ansible_facts']['eth0']['ipv4']['address']}}"
 PORT="5432"
 DATABASE="rowt_db"
 DATABASE_USERNAME="rowt_admin"

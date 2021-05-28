@@ -110,19 +110,19 @@ resource "local_file" "inventory" {
    filename="hosts"
    content=<<EOT
 [bastion]	
-${digitalocean_droplet.bastion.ipv4_address}
+bastion ansible_host=${digitalocean_droplet.bastion.ipv4_address}
 
 [api]
 api ansible_host=${digitalocean_droplet.api.ipv4_address} 
 
 [route_engine] 
-${digitalocean_droplet.gh.ipv4_address}
+re ansible_host=${digitalocean_droplet.gh.ipv4_address}
 
 [database] 
 db ansible_host=${digitalocean_droplet.db.ipv4_address}
 
 [reverse_proxy]
-${digitalocean_droplet.rp.ipv4_address}
+rp ansible_host=${digitalocean_droplet.rp.ipv4_address}
 
  EOT
 }

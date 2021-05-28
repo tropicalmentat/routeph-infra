@@ -6,7 +6,7 @@ After=network.target
 User=rowt_admin
 Group=www-data
 WorkingDirectory=/var/www/rowt-api
-EnvironmentFIle=/var/www/rowt-api/.env
+EnvironmentFile=/var/www/rowt-api/.env
 ExecStart=/var/www/rowt-api/api-venv/bin/gunicorn --workers 2 --bind unix:rowt-api.sock wsgi:app
 
 [Install]
