@@ -4,11 +4,11 @@ server {
 
 	location / {
 		include proxy_params;
-		proxy_pass http://unix:/var/www/rowt-api/rowt-api.sock;
+		proxy_pass http://unix:/var/www/routes-api/routes-api.sock;
 
 	}
 	location /get-bike-parking {
 		include proxy_params;
-		proxy_pass http://unix:/var/www/rowt-api/rowt-api.sock;
+		proxy_pass http://unix:/var/www/routes-api/routes-api.sock;
 	}
 }

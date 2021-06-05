@@ -1,9 +1,9 @@
 server {
 	listen 80;
 	listen [::]:80;
-	server_name test.rowt.ph;
+	server_name dev.routes.ph;
 
-	root /var/www/rowt;
+	root /var/www/routes;
 
 	location /route {
 		proxy_pass http://{{ hostvars.re.ansible_facts.eth0.ipv4.address }};

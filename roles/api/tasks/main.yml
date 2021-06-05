@@ -1,8 +1,8 @@
-- name: Add rowt-api service to systemd
+- name: Add routes-api service to systemd
   become: yes
   copy:
-          src: templates/rowt-api.service
-          dest: /etc/systemd/system/rowt-api.service
+          src: templates/routes-api.service
+          dest: /etc/systemd/system/routes-api.service
           owner: root
           group: root
 
@@ -12,10 +12,10 @@
           update_cache: yes
           state: present
 
-- name: Add nginx template config for rowt-api
+- name: Add nginx template config for routes-api
   template:
-          src: templates/rowt-api.j2
-          dest: /etc/nginx/sites-available/rowt-api
+          src: templates/routes-api.j2
+          dest: /etc/nginx/sites-available/routes-api
           owner: root
           group: root
 
@@ -37,20 +37,20 @@
           state: directory
 
 - name: Clone API repo
-  #become_user: rowt_admin
+  #become_user: routes_admin
   become: yes
   git:
-          repo: https://gitlab.com/tropicalmentat/rowt-api.git
-          dest: /var/www/rowt-api
+          repo: https://gitlab.com/tropicalmentat/routes-api.git
+          dest: /var/www/routes-api
           update: no
 
 - name: Pip install requirements
-  #become_user: rowt_admin
+  #become_user: routes_admin
   become: yes
   pip:
-          requirements: /var/www/rowt-api/requirements.txt
+          requirements: /var/www/routes-api/requirements.txt
           virtualenv_command: virtualenv
-          virtualenv: /var/www/rowt-api/api-venv
+          virtualenv: /var/www/routes-api/api-venv
 
 # TODO: Add task for creating gunicorn daemon for project as indicated here: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
 # TODO: Deploy credentials as environmental variables instead of .env

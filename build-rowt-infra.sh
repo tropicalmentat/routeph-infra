@@ -1,6 +1,8 @@
 rm facts/*
 terraform plan
 echo "yes" | terraform apply
+echo "Wait for 30s before next step"
+sleep 10s
 . add_hosts.sh
 ansible-playbook --private-key /home/rowt_admin/.ssh/id_rsa -i hosts config-hosts.yml
 ansible-playbook --private-key /home/rowt_admin/.ssh/id_rsa -i hosts config-vpc.yml

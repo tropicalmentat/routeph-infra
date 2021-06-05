@@ -4,10 +4,10 @@
           name: nginx
           state: present
 
-- name: Make www dir for rowt frontend
+- name: Make www dir for routes frontend
   become: yes
   file:
-          path: /var/www/rowt
+          path: /var/www/routes
           state: directory
 
 

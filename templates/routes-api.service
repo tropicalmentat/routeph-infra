@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve routes-api
+After=network.target
+
+[Service]
+User=rowt_admin
+Group=www-data
+WorkingDirectory=/var/www/routes-api
+EnvironmentFile=/var/www/routes-api/.env
+ExecStart=/var/www/routes-api/api-venv/bin/gunicorn --workers 2 --bind unix:routes-api.sock wsgi:app
+
+[Install]
+WantedBy=multi-user.target

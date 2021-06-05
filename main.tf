@@ -19,12 +19,12 @@ variable "pvtkey_path" {
 
 resource "digitalocean_project" "sandbox" {
    name="rowt-sandbox"
-   resources=[digitalocean_domain.rowt.urn,
-				  digitalocean_droplet.bastion.urn,
+   resources=[digitalocean_domain.routes.urn,
+              digitalocean_droplet.bastion.urn,
               digitalocean_droplet.api.urn,
               digitalocean_droplet.gh.urn,
               digitalocean_droplet.db.urn,
-				  digitalocean_droplet.rp.urn
+	      digitalocean_droplet.rp.urn
 	      ]
 }
 
@@ -144,14 +144,14 @@ resource "local_file" "host_script" {
    EOT
 }
 
-resource "digitalocean_domain" "rowt" {
-	name="rowt.ph"
+resource "digitalocean_domain" "routes" {
+	name="routes.ph"
 }
 
-resource "digitalocean_record" "test" {
-	domain = digitalocean_domain.rowt.name
+resource "digitalocean_record" "dev" {
+	domain = digitalocean_domain.routes.name
 	type = "A"
-	name = "test"
+	name = "dev"
 	value = digitalocean_droplet.rp.ipv4_address
 }
 
