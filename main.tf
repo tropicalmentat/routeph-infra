@@ -132,7 +132,7 @@ resource "local_file" "host_script" {
    content=<<EOT
    echo "Setting SSH Key"
 	eval "$(ssh-agent)"
-   ssh-add /home/rowt_admin/.ssh/id_rsa
+   ssh-add /home/ctrlr/.ssh/id_rsa
    echo "Adding IPs"
 
    ssh-keyscan -H ${digitalocean_droplet.bastion.ipv4_address} >> ~/.ssh/known_hosts
