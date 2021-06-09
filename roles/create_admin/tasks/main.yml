@@ -4,6 +4,11 @@
     name: rowt_admin
     group: sudo
 
+- name: Update and upgrade cache
+  apt:
+          update_cache: yes
+          upgrade: yes
+
 - name: Add SSH key to 'rowt_admin'
   authorized_key:
     user: rowt_admin
@@ -23,3 +28,5 @@
   command: /usr/bin/timedatectl set-timezone Asia/Manila
   become: yes
 
+- name: Reboot
+  reboot:

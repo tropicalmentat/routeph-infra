@@ -14,7 +14,6 @@
   apt:
           name: iptables
           state: present
-          update_cache: yes
         
 # from https://docs.digitalocean.com/products/networking/vpc/resources/droplet-as-gateway/
 # TODO: Configure NAT by installing and configuring iptables

@@ -1,7 +1,6 @@
 # https://computingforgeeks.com/how-to-install-postgis-on-ubuntu-debian/
 - name: Update and install upgrades
   apt:
-          update_cache: yes
           upgrade: safe
           state: present
 
