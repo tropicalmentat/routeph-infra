@@ -1,13 +1,4 @@
 # https://computingforgeeks.com/how-to-install-postgis-on-ubuntu-debian/
-- name: Update and install upgrades
-  apt:
-          upgrade: safe
-          state: present
-
-#only need it when configuring the first time
-- name: Reboot
-  reboot: 
-
 - name: Install gnupg2 
   apt: 
           state: present
