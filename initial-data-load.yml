@@ -1,0 +1,22 @@
+---
+- name: Initial data load
+  hosts: database:reverse_proxy
+  remote_user: rowt_admin
+
+  tasks:
+          - name: Load data into rowt_db
+            command: osm2pgsql -d rowt_db -j -c -C=1200 -s philippines-latest.osm.pbf
+            async: 100000
+            poll: 0
+            register: load
+            when: "'db' in inventory_hostname"
+
+          - debug:
+                  var: load
+
+          - name: Deploy graphhopper with philippine data
+            shell:
+                    cmd: nohup bash graphhopper.sh -a web -i asia_philippines.pbf --port 80 </dev/null >/dev/null 2>&1 &
+                    chdir: /home/rowt_admin/graphhopper
+            when: "'re' in inventory_hostname"
+

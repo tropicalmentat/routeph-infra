@@ -49,11 +49,5 @@
           regexp: '.*bind_host.*'
           replace: '#bind_host'
 
-- name: Deploy graphhopper with philippine data          
-  become: yes
-  shell: 
-          cmd: nohup bash graphhopper.sh -a web -i asia_philippines.pbf --port 80 </dev/null >/dev/null 2>&1 &
-          chdir: /home/rowt_admin/graphhopper
-
 # TODO: Edit config file to change vehicle profile to bike only
 # TODO: Add elevation data in route planning

@@ -11,3 +11,4 @@ ansible-playbook --private-key /home/$USER/.ssh/id_rsa -i hosts config-route_eng
 ansible-playbook --private-key /home/$USER/.ssh/id_rsa -i hosts config-reverse_proxy.yml
 ansible-playbook --private-key /home/$USER/.ssh/id_rsa -i hosts config-api.yml
 ansible-playbook --private-key /home/$USER/.ssh/id_rsa -i hosts config-backend.yml
+ansible-playbook --private-key /home/$USER/.ssh/id_rsa -i hosts initial-data-load.yml
