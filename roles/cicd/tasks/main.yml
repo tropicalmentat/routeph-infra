@@ -1,7 +1,21 @@
-# TODO: copy script from https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh to local file
-# TODO: Run script
-# TODO: Install gitlab-runner
-# TODO: Register runner with token (use env variable)
 # TODO: Create deployment user in bastion host
 # TODO: Separately create SSH key as deployment user and keep in ctrlnode
 # TODO: Install npm, vue, vuetify and vue2leaflet 
+
+- name: Copy script
+  become: rowt_admin
+  get_url:
+          url: https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh
+          dest: /home/rowt_admin
+
+- name: Run script
+  become: yes
+  #become_user: rowt_admin
+  shell: bash /home/rowt_admin/script.deb.sh
+
+- name: Install gitlab-runner
+  apt:
+          name: gitlab-runner
+          state: present
+
+# TODO: Register runner with token         
