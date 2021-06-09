@@ -1,6 +1,6 @@
 ---
 - name: Initial data load
-  hosts: database:reverse_proxy
+  hosts: database:route_engine
   remote_user: rowt_admin
 
   tasks:
@@ -15,6 +15,7 @@
                   var: load
 
           - name: Deploy graphhopper with philippine data
+            become: yes
             shell:
                     cmd: nohup bash graphhopper.sh -a web -i asia_philippines.pbf --port 80 </dev/null >/dev/null 2>&1 &
                     chdir: /home/rowt_admin/graphhopper
