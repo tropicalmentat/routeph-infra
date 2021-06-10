@@ -4,12 +4,12 @@
 terraform {
 	backend "s3" {
     	endpoint = "sgp1.digitaloceanspaces.com"
-		region="ap-southeast-1"
-		key="terraform.tf.state"
-		skip_requesting_account_id=true
-		skip_credentials_validation=true
-		skip_get_ec2_platforms=true
-		skip_metadata_api_check=true
+	region="ap-southeast-1"
+	key="terraform.tf.state"
+	skip_requesting_account_id=true
+	skip_credentials_validation=true
+	skip_get_ec2_platforms=true
+	skip_metadata_api_check=true
 	}	
 }
 

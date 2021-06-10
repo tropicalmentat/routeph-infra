@@ -68,15 +68,6 @@
             when: "'api' in inventory_hostname"
             notify: "restart nginx"
 
-          - name: Add reverse proxy config
-            template:
-                    src: templates/routes.j2
-                    dest: /etc/nginx/sites-available/routes
-                    owner: root
-                    group: root
-            when: "'rp' in inventory_hostname"
-            notify: "restart nginx"
-
           - name: Create symbolic link of routes frontend to sites-enabled
             become: yes
             file:
