@@ -1,5 +1,18 @@
 # https://coffay.haus/pages/terraform+ansible
 # https://alex.dzyoba.com/blog/terraform-ansible/
+
+terraform {
+	backend "s3" {
+    	endpoint = "sgp1.digitaloceanspaces.com"
+		region="ap-southeast-1"
+		key="terraform.tf.state"
+		skip_requesting_account_id=true
+		skip_credentials_validation=true
+		skip_get_ec2_platforms=true
+		skip_metadata_api_check=true
+	}	
+}
+
 provider digitalocean {
     token = var.do_token
     version = "2.7.0"

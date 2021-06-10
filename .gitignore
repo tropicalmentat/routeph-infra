@@ -5,3 +5,4 @@
 hosts
 *add_host*
 facts
+backend_config.hcl
