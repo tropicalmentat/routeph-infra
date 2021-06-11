@@ -1,4 +1,3 @@
-# TODO: Create deployment user in bastion host
 # TODO: Separately create SSH key as deployment user and keep in ctrlnode
 # TODO: Install npm, vue, vuetify and vue2leaflet 
 
@@ -19,3 +18,8 @@
           state: present
 
 # TODO: Register runner with token         
+- name: Register runner
+  become: yes
+  shell: gitlab-runner register -n --url https://gitlab.com --registration-token  v--2Q5766pZikZQnzyYJ --executor shell
+
+# TODO: Create deployment user
