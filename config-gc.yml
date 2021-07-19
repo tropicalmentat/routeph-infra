@@ -1,0 +1,6 @@
+---
+- hosts: database:api:reverse_proxy 
+  user: rowt_admin
+  become: yes
+  roles: 
+     - gc

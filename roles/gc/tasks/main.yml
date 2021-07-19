@@ -1,0 +1,6 @@
+- name: Install php-cgi
+  apt:
+          name: php-cgi
+          state: present
+  when: "'db' in inventory_hostname or 'api' in inventory_hostname"
+
