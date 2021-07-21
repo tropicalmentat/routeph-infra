@@ -4,3 +4,31 @@
           state: present
   when: "'db' in inventory_hostname or 'api' in inventory_hostname"
 
+- name: Install nominatim required packages
+  apt:
+          name: [
+                  build-essential,cmake,g++,libboost-dev,libboost-system-dev,
+                  libboost-filesystem-dev,libexpat1-dev,zlib1g-dev,
+                  libbz2-dev,libpq-dev,libproj-dev,
+                  php,php-pgsql,php-intl,libicu-dev,python3-dotenv,
+                  python3-psycopg2,python3-psutil,python3-jinja2,python3-icu
+                ]
+          state: present
+  when: "'db' in inventory_hostname or 'api' in inventory_hostname"
+
+
+- name: Uncompress Nominatim binaries
+  unarchive:
+          owner: rowt_admin
+          group: sudo
+          src: https://nominatim.org/release/Nominatim-3.7.2.tar.bz2
+          dest: /home/rowt_admin/
+          remote_src: yes
+  when: "'db' in inventory_hostname or 'api' in inventory_hostname"
+
+- name: Make build directory for Nominatim
+  file:
+          path: /home/rowt_admin/build
+          state: directory
+  when: "'db' in inventory_hostname or 'api' in inventory_hostname"
+
