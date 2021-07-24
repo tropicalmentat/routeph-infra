@@ -57,6 +57,15 @@
           password: test#124$
           role_attr_flags: CREATEDB,SUPERUSER
 
+# TODO: Create user for Nominatim webserver
+- name: Create www-data db user for nominatim webserver
+  become: yes
+  become_user: postgres
+  postgresql_user:
+          name: www-data
+          password: test#124$
+
+
 - name: Create rowt_db
   become_user: rowt_admin
   postgresql_db:
