@@ -1,10 +1,12 @@
 - name: Install php-cgi
+  become: yes
   apt:
           name: php-cgi
           state: present
   when: "'db' in inventory_hostname or 'api' in inventory_hostname"
 
 - name: Install nominatim required packages
+  become: yes
   apt:
           name: [
                   build-essential,cmake,g++,libboost-dev,libboost-system-dev,
@@ -38,8 +40,39 @@
 
 - name: Cmake
   shell: cmake /home/rowt_admin/Nominatim-3.7.2
+  become: yes
+  become_user: rowt_admin
   args:
           chdir: /home/rowt_admin/build
   when: "'db' in inventory_hostname or 'api' in inventory_hostname"
 
-          
+
+- name: Make
+  become: yes
+  shell: make
+  args:
+          chdir: /home/rowt_admin/build
+  when: "'db' in inventory_hostname or 'api' in inventory_hostname"
+
+
+- name: Make install
+  become: yes
+  shell: make install
+  args:
+          chdir: /home/rowt_admin/build
+  when: "'db' in inventory_hostname or 'api' in inventory_hostname"
+
+- name: Make directory for website
+  file:
+          path: /home/rowt_admin/nominatim-ph
+          state: directory
+  when: "'db' in inventory_hostname"
+
+
+- name: Load data
+  shell: 
+        cmd: nominatim import --osm-file ../philippines-latest.osm.pbf -v 2>&1 | tee setup.log 
+        chdir: /home/rowt_admin/nominatim-ph
+  async: 200000
+  poll: 0
+  when: "'db' in inventory_hostname"
