@@ -19,7 +19,7 @@
   register: st 
 
 - name: Clone graphhopper
-  command: git clone https://github.com/graphhopper/graphhopper.git       
+  command: git clone https://github.com/graphhopper/graphhopper.git 
   when: st.stat.exists == False
 
 - name: Check if asia_philippines.pbf exists
