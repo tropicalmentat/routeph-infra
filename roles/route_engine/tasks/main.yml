@@ -33,15 +33,6 @@
           dest: /home/rowt_admin/graphhopper/asia_philippines.pbf
   when: osm_ph.stat.exists == False
 
-# TODO: Explore using replace instead of lineinfile
-- name: Edit java heapsize for graphhopper
-  lineinfile:
-          backup: yes
-          path: /home/rowt_admin/graphhopper/graphhopper.sh
-          regex: '.*-Xmx1000m -Xms1000m.*'
-          state: present
-          line: ': "${JAVA_OPTS:=-Xmx2000m -Xms2000m}"'
-
 - name: Unbind application connector from localhost
   replace:
           backup: yes
