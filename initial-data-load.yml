@@ -17,7 +17,8 @@
           - name: Deploy graphhopper with philippine data
             become: yes
             shell:
-                    cmd: nohup bash graphhopper.sh -a web -i asia_philippines.pbf --port 80 </dev/null >/dev/null 2>&1 &
+                    cmd: nohup java -Xmx2000m -Xms2000m -Ddw.graphhopper.datareader.file=asia_philippines.pbf -jar web/target/graphhopper-web-*.jar server config-example.yml </dev/null >/dev/null 2>&1 &
                     chdir: /home/rowt_admin/graphhopper
             when: "'re' in inventory_hostname"
+            tags: route_planner
 
