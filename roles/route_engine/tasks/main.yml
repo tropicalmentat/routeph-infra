@@ -45,6 +45,8 @@
   shell:
         cmd: mvn clean install -DskipTests
         chdir: /home/rowt_admin/graphhopper
+  async: 600
+  poll: 30
 
 # TODO: Edit config file to change vehicle profile to bike only
 # TODO: Add elevation data in route planning
