@@ -40,5 +40,11 @@
           regexp: '.*bind_host.*'
           replace: '#bind_host'
 
+- name: Clean install graphhopper with Maven
+  become: yes
+  shell:
+        cmd: mvn clean install -DskipTests
+        chdir: /home/rowt_admin/graphhopper
+
 # TODO: Edit config file to change vehicle profile to bike only
 # TODO: Add elevation data in route planning
