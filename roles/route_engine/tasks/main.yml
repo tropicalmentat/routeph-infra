@@ -40,12 +40,19 @@
           regexp: '.*bind_host.*'
           replace: '#bind_host'
 
+- name: Replace application_connector port
+  replace:
+          backup: yes
+          path: /home/rowt_admin/graphhopper/config-example.yml
+          regexp: '8989'
+          replace: '80'
+
 - name: Clean install graphhopper with Maven
   become: yes
   shell:
         cmd: mvn clean install -DskipTests
         chdir: /home/rowt_admin/graphhopper
-  async: 600
+  async: 750 
   poll: 30
 
 # TODO: Edit config file to change vehicle profile to bike only
